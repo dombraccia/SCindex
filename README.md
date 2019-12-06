@@ -1,6 +1,18 @@
 # Matrix sub-pattern search for querying of single-cell data
 
-This repo was created to track the progress of a CMSC856D final project. Here is the project problem statement:
+This repo was created to track the progress of a CMSC856D final project. The project problem statement can be found at the end of this README.
+
+# Data Download
+
+data was downloaded and unzipped using:
+```
+wget http://cf.10xgenomics.com/samples/cell-exp/1.1.0/fresh_68k_pbmc_donor_a/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz
+gunzip fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz
+tar xvf fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar
+rm fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz
+```
+
+# Problem Statment
 
 Consider a large single-cell expression matrix E of dimensions M × N. Here, M
 is the number of reference genes, and N is the number of cells. In general, M
@@ -28,6 +40,4 @@ the constrants. A trivial lower-bound on the query time is O(|R|) — that is
 linear in the size of the output. The goal here is to develop an index that lets
 you answer arbitrary queries quickly in expectation, beating the trivial upper
 bound for most queries.
-
-More to come
 

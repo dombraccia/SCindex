@@ -1,0 +1,11 @@
+## R stuff
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+## Mac
+.DS_Store
+
+## Folders
+data/*
