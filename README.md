@@ -2,7 +2,7 @@
 
 This repo was created to track the progress of a CMSC856D final project. The project problem statement can be found at the end of this README.
 
-# Data Download
+## Data Download
 
 data was downloaded and unzipped using:
 ```
@@ -12,7 +12,15 @@ tar xvf fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar
 rm fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz
 ```
 
-# Problem Statment
+## Data processing
+Data downloaded from 10X Genomics needs to be converted from sparse matrix representation (specifically of the '.mtx' variety) to an inverted index as is customary in information retrieval inspiried algorithms. To process the data, run the following code:
+```
+cd src
+g++ process_input.cpp -o process_input
+./process_input
+```
+
+## Problem Statement
 
 Consider a large single-cell expression matrix E of dimensions M × N. Here, M
 is the number of reference genes, and N is the number of cells. In general, M
