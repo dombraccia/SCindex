@@ -93,16 +93,12 @@ void mtx2ii() // help from: http://www.cplusplus.com/forum/general/65804/
 
     //cout << "break 2" << endl; 
 
-    // Read the data
-    int MN = M * N; // had to set the upper limit to be M * N, not L
-    cout << "M * N = " << MN << endl; // returned: -2049827994 .. weird
-
     // initializing struct data_map 
     struct data_map my_datamap;
     my_datamap.my_index.insert(pair<int,vector<int> >(0, vector<int>()));
 
-    for (int l = 0; l < 10000; l++) // for now it only goes to the 10,000th
-    {                               // element. needs to go to MNth element
+    for (int l = 0; l < L; l++) // only needs to go up to Lth non-zero element
+    {                              
         //cout << "from for loop: l = " << l << endl;
         // initialize row and column variables
     	int m, n, exp;
