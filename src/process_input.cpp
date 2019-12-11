@@ -25,15 +25,15 @@ using namespace std;
 struct cell
 {
     uint64_t cellid;
-    cell *next;
-    cell *skip;
+    cell* next;
+    cell* skip;
 };
 
 // DESCRIPTION
 class Skiplist
 {
     public:
-    map<int, cell> gene_map;
+    map<int, cell*> gene_map;
     int skip_value;
     // constructor
     Skiplist(string filepath)
@@ -60,49 +60,49 @@ class Skiplist
         //cout << "break 2" << endl;
 
         // initializing struct data_map
-        struct cell tmp_cell;
+        // struct cell tmp_cell;
         map<int, cell*> gene_map_last;
         //struct data_map my_datamap;
         //my_datamap.my_index.insert(pair<int, vector<int>>(0, vector<int>()));
 
-        for (int l = 0; l < 40000; l++) // only needs to go up to Lth non-zero element
+        for (int l = 0; l < L; l++) // only needs to go up to Lth non-zero element
         {
-            cout << "from for loop: l = " << l << endl;
+            // cout << "from for loop: l = " << l << endl;
             // initialize row and column variables
             int m, n, exp;
-            struct cell tmp_cell;
+            cell* tmp_cell = new cell;
 
             // m: gene (row number); n = cell (col number); data = value of expression
             data >> m >> n >> exp;
-            cout << "m = " << m << endl;
-            cout << "n = " << n << endl;
-            cout << "exp = " << exp << endl;
+            // cout << "m = " << m << endl;
+            // cout << "n = " << n << endl;
+            // cout << "exp = " << exp << endl;
             
             //description
-            tmp_cell.cellid = n;
+            tmp_cell->cellid = n;
 
             // assign m & n in data_map //
             // NOTE: n (cell numbers) should already be sorted low -> high
             if (gene_map_last.find(m) == gene_map_last.end())
             {
                 // initializing key m with empty vector & adding first cell value
-                cout << "gene doesnt exist" << endl;
-                gene_map.insert(pair<int, cell>(m, tmp_cell));
-                gene_map_last.insert(pair<int, cell*>(m, &tmp_cell));
+                // cout << "gene doesnt exist" << endl;
+                gene_map.insert(pair<int, cell*>(m, tmp_cell));
+                gene_map_last.insert(pair<int, cell*>(m, tmp_cell));
             }
             else
             {
-                cout << "gene exists" << endl;
+                // cout << "gene exists" << endl;
                 cell* last_cell = gene_map_last[m];
-                cout << last_cell->cellid << endl;
-                cout << last_cell << endl;
-                last_cell->next = &tmp_cell;
-                cout << last_cell->next << endl;
-                gene_map_last[m] = &tmp_cell;
+                // cout << last_cell->cellid << endl;
+                // cout << last_cell << endl;
+                last_cell->next = tmp_cell;
+                // cout << last_cell->next << endl;
+                gene_map_last[m] = tmp_cell;
             }
-            cout << gene_map_last[m] << endl;
+            // cout << gene_map_last[m] << endl;
             // this out tests the addition of the cell # to the vector
-            cout << "testing struct: " << gene_map[m].cellid << endl;
+            // cout << "testing struct: " << gene_map[m]->cellid << endl;
         }
         //cout << "break 3" << endl;
         data.close();
@@ -113,13 +113,15 @@ class Skiplist
 int main()
 {
     cout << "from `process_input.cpp`" << endl;
-    Skiplist input_data("../data/filtered_matrices_mex/hg19/matrix.mtx");
-    cell last_cell = input_data.gene_map[32709];
-    cout << last_cell.cellid << endl;
-    cout << last_cell.next << endl;
+    Skiplist input_data ("/mnt/c/Users/jayar/Desktop/projects/SCindex/filtered_matrices_mex/hg19/matrix.mtx");
+    cout << "end building skiplist" << endl;
+    cell* last_cell = input_data.gene_map.at(32709);
+    cout << input_data.gene_map.size() << endl;
+    cout << last_cell->cellid << endl;
+    cout << last_cell->next->cellid << endl;
+    cout << last_cell->next->next->cellid << endl;
+    cout << last_cell->next->next->next->cellid << endl;
+    cout << last_cell->next->next->next->next->cellid << endl;
     // cout << &(input_data.gene_map[32709].next).cellid << endl;
-
-
-    
 };
 
