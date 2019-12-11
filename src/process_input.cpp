@@ -36,7 +36,7 @@ class Skiplist
     map<int, cell*> gene_map;
     int skip_value;
     // constructor
-    Skiplist(string filepath)
+    Skiplist(string filepath int skipval)
     {
         cout << "fetching data from files" << endl;
         ifstream data;
@@ -62,6 +62,7 @@ class Skiplist
         // initializing struct data_map
         // struct cell tmp_cell;
         map<int, cell*> gene_map_last;
+        map<int, cell*> gene_map_skip;
         //struct data_map my_datamap;
         //my_datamap.my_index.insert(pair<int, vector<int>>(0, vector<int>()));
 
@@ -89,6 +90,7 @@ class Skiplist
                 // cout << "gene doesnt exist" << endl;
                 gene_map.insert(pair<int, cell*>(m, tmp_cell));
                 gene_map_last.insert(pair<int, cell*>(m, tmp_cell));
+                gene_map_skip.insert(pair<int, cell*>(m, tmp_cell));
             }
             else
             {
@@ -99,6 +101,13 @@ class Skiplist
                 last_cell->next = tmp_cell;
                 // cout << last_cell->next << endl;
                 gene_map_last[m] = tmp_cell;
+
+                cell* skip_cell = gene_map_skip[m];
+
+                if (int(skip_cell / skipval) != int ( n/skipval)) {
+                    skip_cell->skip = tmp_cell;
+                    gene_map_skip[m] = tmp_cell;
+                }
             }
             // cout << gene_map_last[m] << endl;
             // this out tests the addition of the cell # to the vector
@@ -113,7 +122,7 @@ class Skiplist
 int main()
 {
     cout << "from `process_input.cpp`" << endl;
-    Skiplist input_data ("/mnt/c/Users/jayar/Desktop/projects/SCindex/filtered_matrices_mex/hg19/matrix.mtx");
+    Skiplist input_data ("/mnt/c/Users/jayar/Desktop/projects/SCindex/filtered_matrices_mex/hg19/matrix.mtx", 100);
     cout << "end building skiplist" << endl;
     cell* last_cell = input_data.gene_map.at(32709);
     cout << input_data.gene_map.size() << endl;

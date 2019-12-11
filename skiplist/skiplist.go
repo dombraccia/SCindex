@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	// "github.com/bradleyjkemp/memviz"
+	"github.com/bradleyjkemp/memviz"
 	"strconv"
 	"strings"
 	"bufio"
 	"os"
-	// "bytes"
+	"bytes"
 	"time"
 )
 
@@ -93,8 +93,8 @@ func buildSkipList(filepath string, skipval int) *skiplist {
 			last_cell.next = tmp_cell
 			skip_list_last_tracker[m] = tmp_cell
 
-			if int(last_cell.cellid / skipval) + 1  ==  int(n / skipval) {
-				last_skip_cell := skip_list_skip_tracker[m]
+			last_skip_cell := skip_list_skip_tracker[m]
+			if int(last_skip_cell.cellid / skipval)  !=  int(n / skipval) {
 				last_skip_cell.skip = tmp_cell
 				skip_list_skip_tracker[m] = tmp_cell
 			}
@@ -209,7 +209,7 @@ func main() {
 	// fmt.Println(skips.list[32709].next.next.cellid)
 	// fmt.Println(skips.list[32709].next.next.next.cellid)	q
 
-	// buf := &bytes.Buffer{}
-	// memviz.Map(buf, skips.list[28606])
-	// fmt.Println(buf.String())
+	buf := &bytes.Buffer{}
+	memviz.Map(buf, skips.list[28606])
+	fmt.Println(buf.String())
 }
