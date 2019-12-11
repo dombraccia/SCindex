@@ -129,11 +129,7 @@ class Skiplist
 int main()
 {
     cout << "from `process_input.cpp`" << endl;
-<<<<<<< HEAD
     Skiplist input_data ("/mnt/c/Users/jayar/Desktop/projects/SCindex/filtered_matrices_mex/hg19/matrix.mtx", 100);
-=======
-    Skiplist input_data ("../data/filtered_matrices_mex/hg19/matrix.mtx");
->>>>>>> 0f4a96facece355651867d2b6188d89acb4acaa1
     cout << "end building skiplist" << endl;
 
     // Below are print statements to test that the Skiplist built properly
