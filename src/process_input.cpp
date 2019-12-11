@@ -9,6 +9,7 @@
 #include <math.h>
 #include <cmath>
 #include <cfloat>
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
 using namespace std;
 
 /* A program for taking in the sparse matrix representation and converting it
@@ -41,6 +42,12 @@ class Skiplist
         cout << "fetching data from files" << endl;
         ifstream data;
         data.open(filepath);
+
+        if (!data.is_open())
+        {
+            cout << "ERROR: It seems that the filepath you gave does not exist." << endl;
+            exit(EXIT_FAILURE);
+        }
 
         //cout << "break 1" << endl;
 
@@ -113,15 +120,17 @@ class Skiplist
 int main()
 {
     cout << "from `process_input.cpp`" << endl;
-    Skiplist input_data ("/mnt/c/Users/jayar/Desktop/projects/SCindex/filtered_matrices_mex/hg19/matrix.mtx");
+    Skiplist input_data ("../data/filtered_matrices_mex/hg19/matrix.mtx");
     cout << "end building skiplist" << endl;
-    cell* last_cell = input_data.gene_map.at(32709);
-    cout << input_data.gene_map.size() << endl;
-    cout << last_cell->cellid << endl;
-    cout << last_cell->next->cellid << endl;
-    cout << last_cell->next->next->cellid << endl;
-    cout << last_cell->next->next->next->cellid << endl;
-    cout << last_cell->next->next->next->next->cellid << endl;
+
+    // Below are print statements to test that the Skiplist built properly
+    // cell* last_cell = input_data.gene_map.at(32709);
+    // cout << input_data.gene_map.size() << endl;
+    // cout << last_cell->cellid << endl;
+    // cout << last_cell->next->cellid << endl;
+    // cout << last_cell->next->next->cellid << endl;
+    // cout << last_cell->next->next->next->cellid << endl;
+    // cout << last_cell->next->next->next->next->cellid << endl;
     // cout << &(input_data.gene_map[32709].next).cellid << endl;
 };
 
