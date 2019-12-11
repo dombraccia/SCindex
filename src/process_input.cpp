@@ -37,7 +37,7 @@ class Skiplist
     map<int, cell*> gene_map;
     int skip_value;
     // constructor
-    Skiplist(string filepath int skipval)
+    Skiplist(string filepath, int skipval)
     {
         cout << "fetching data from files" << endl;
         ifstream data;
@@ -111,7 +111,7 @@ class Skiplist
 
                 cell* skip_cell = gene_map_skip[m];
 
-                if (int(skip_cell / skipval) != int ( n/skipval)) {
+                if (int(skip_cell->cellid / skipval) != int ( n/skipval)) {
                     skip_cell->skip = tmp_cell;
                     gene_map_skip[m] = tmp_cell;
                 }
