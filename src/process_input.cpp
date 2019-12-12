@@ -60,9 +60,9 @@ class Skiplist
 
         // Read defining parameters:
         data >> M >> N >> L;
-        cout << "M = " << M << endl;
-        cout << "N = " << N << endl;
-        cout << "L = " << L << endl;
+        cout << "number of genes = " << M << endl;
+        cout << "number of cells = " << N << endl;
+        cout << "number of non-zero expressed genes = " << L << endl;
 
         //cout << "break 2" << endl;
 
@@ -129,17 +129,22 @@ class Skiplist
 int main()
 {
     cout << "from `process_input.cpp`" << endl;
-    Skiplist input_data ("/mnt/c/Users/jayar/Desktop/projects/SCindex/filtered_matrices_mex/hg19/matrix.mtx", 100);
+
+    // the Skiplist constuctor takes two parameters from the user:
+    //      1. "path/to/file.mtx" (a string)
+    //      2. skip_value (an int)
+    Skiplist input_data ("../data/filtered_matrices_mex/hg19/matrix.mtx", 100);
     cout << "end building skiplist" << endl;
 
     // Below are print statements to test that the Skiplist built properly
-    // cell* last_cell = input_data.gene_map.at(32709);
+    cell* last_cell = input_data.gene_map.at(32709);
     // cout << input_data.gene_map.size() << endl;
-    // cout << last_cell->cellid << endl;
-    // cout << last_cell->next->cellid << endl;
-    // cout << last_cell->next->next->cellid << endl;
-    // cout << last_cell->next->next->next->cellid << endl;
-    // cout << last_cell->next->next->next->next->cellid << endl;
+    cout << last_cell->cellid << endl;
+    cout << last_cell->next->cellid << endl;
+    cout << last_cell->skip->cellid << endl;
+    cout << last_cell->skip->skip->cellid << endl;
+    cout << last_cell->skip->skip->next->cellid << endl;
+    cout << last_cell->skip->skip->next->next->cellid << endl;
     // cout << &(input_data.gene_map[32709].next).cellid << endl;
 };
 
