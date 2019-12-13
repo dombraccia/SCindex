@@ -9,6 +9,7 @@ import (
 	"os"
 	"bytes"
 	"time"
+	"math"
 )
 
 // cell structure
@@ -111,87 +112,203 @@ func buildSkipList(filepath string, skipval int) *skiplist {
 	return skip_obj
 }
 
-// func (sl skiplist) union(genea, geneb int) {
+func (sl skiplist) union(genea, geneb int) *cell {
 	
-// 	cella, oka := sl.list[genea] 
-//     if !oka {
-// 		panic(oka)
-// 	} 
+	cella, oka := sl.list[genea] 
+    if !oka {
+		panic(oka)
+	} 
 
-// 	cellb, okb := sl.list[geneb]
-// 	if !okb {
-// 		panic(okb)
-// 	}
+	cellb, okb := sl.list[geneb]
+	if !okb {
+		panic(okb)
+	}
 
-// 	union_list := make([]int, 0)
+	union_cells := new(cell)
+	var last_cell *cell = union_cells
+	var last_skip *cell = union_cells
 
-// 	union_cells = func(cella, cellb *cell) {
+	for cella != nil && cellb != nil {
+		tmp_cell := new(cell)
 
-// 		if cella.cellid < cellb.cellid {
-// 			union_cells(cella.next, cellb); 
-// 			return append(union_list, cella.cellid); 
-// 		} else if cella.cellid > cellb.cellid {
-// 			union_cells(cella, cellb.next); 
-// 			return append(union_list, cellb.cellid); 
-// 		} else if cella.cellid == cellb.cellid {
-// 			union_cells(cella.next, cellb.next);
-// 			return append(union_list, cella.cellid)
-// 		}
-// 	}
+		if cella.cellid < cellb.cellid {
+			
+			last_cell.cellid = cella.cellid
+			last_cell.next = tmp_cell
+			last_cell = tmp_cell
+			
+			if int(last_skip.cellid / sl.skipval) != int(cella.cellid / sl.skipval) {
+				last_skip.skip = tmp_cell
+				last_skip = tmp_cell
+			}
 
-// 	union_cells(cella, cellb)
-// } 
+			cella = cella.next
 
-// func (sl skiplist) intersect(genea,geneb int, cell* intersection)
-// {
-//     if (!A)
-//         return B;
-//     if(!B)
-//         return A;
-// ​
-//     bool flag = True;
-//     if (A->data == B->data)
-//     {
-//         cell *temp = new cell;
-//         temp->data = A->data;
-//         temp->next = NULL;
-//         intersection = temp;
-//     }
-//     else
-//         flag = False;
-// ​
-//     if (A->next->cellid > B->next->cellid )
-//     {
-//         if(abs(A->next->cellid - B->cellid + 1) >= skip_value)
-//         {
-//             if (B->skip != NULL)
-//                 B = B->skip;
-//             else
-//                 B = B->next;
-//         }
-//         else
-//             B = B->next;
-//         A = A->next;
-//     }
-// ​
-//     else
-//     {
-//         if(abs(A->next->cellid - B->cellid + 1) >= skip_value)
-//         {
-//             if (A->skip != NULL)
-//                 A = A->skip;
-//             else
-//                 A = A->next;
-//         }
-//         else
-//             A = A->next;
-//         B = B->next;
-//     }
-//     if (flag)
-//         return INTERSECTION(A, B, skip_value, intersection->next);
-//     else
-//         return INTERSECTION(A, B, skip_value, intersection)
-// }
+		} else if cella.cellid > cellb.cellid {
+
+			last_cell.cellid = cellb.cellid
+			last_cell.next = tmp_cell
+			last_cell = tmp_cell
+
+			if int(last_skip.cellid / sl.skipval) != int(cellb.cellid / sl.skipval) {
+				last_skip.skip = tmp_cell
+				last_skip = tmp_cell
+			}
+			
+			cellb = cellb.next
+
+		} else if cella.cellid == cellb.cellid {
+
+			last_cell.cellid = cella.cellid
+			last_cell.next = tmp_cell
+			last_cell = tmp_cell
+
+			if int(last_skip.cellid / sl.skipval) != int(cella.cellid / sl.skipval) {
+				last_skip.skip = tmp_cell
+				last_skip = tmp_cell
+			}
+
+			cella = cella.next
+			cellb = cellb.next
+		}
+	}
+
+	if cella != nil {
+		for cella != nil {
+			tmp_cell := new(cell)
+				
+			last_cell.cellid = cella.cellid
+			
+			if int(last_skip.cellid / sl.skipval) != int(cella.cellid / sl.skipval) {
+				last_skip.skip = tmp_cell
+				last_skip = tmp_cell
+			}
+
+			cella = cella.next
+
+			if cella != nil {
+				last_cell.next = tmp_cell
+				last_cell = tmp_cell
+			}
+		}
+	}
+
+	if cellb != nil {
+		for cellb != nil {
+			tmp_cell := new(cell)
+				
+			last_cell.cellid = cellb.cellid
+			
+			if int(last_skip.cellid / sl.skipval) != int(cellb.cellid / sl.skipval) {
+				last_skip.skip = tmp_cell
+				last_skip = tmp_cell
+			}
+
+			cellb = cellb.next
+
+			if cellb != nil {
+				last_cell.next = tmp_cell
+				last_cell = tmp_cell
+			}
+		}
+	}
+
+	return union_cells
+} 
+
+func (sl skiplist) intersect(genea, geneb int) *cell {
+	cella, oka := sl.list[genea] 
+    if !oka {
+		panic(oka)
+	} 
+
+	cellb, okb := sl.list[geneb]
+	if !okb {
+		panic(okb)
+	}
+
+	fmt.Println("cella", cella)
+	fmt.Println("cellb", cellb)
+
+	intersect_cells := new(cell)
+	var last_cell *cell = intersect_cells
+	var last_skip *cell = intersect_cells
+
+	for cella != nil && cellb != nil {
+		tmp_cell := new(cell)
+
+		fmt.Println("loop - cella, cellb", cella, cellb)
+
+        if cella.cellid == cellb.cellid {
+			fmt.Println("cella = cellb")
+
+			last_cell.cellid = cella.cellid
+			last_cell.next = tmp_cell
+			last_cell = tmp_cell
+
+			if int(last_skip.cellid / sl.skipval) != int(cella.cellid / sl.skipval) {
+				last_skip.skip = tmp_cell
+				last_skip = tmp_cell
+			}
+
+			cella = cella.next
+			cellb = cellb.next
+
+        } else if cella.cellid < cellb.cellid {
+
+			fmt.Println("loop - cella < cellb", cella, cellb)
+
+            if int(math.Abs(float64(cella.next.cellid - cellb.cellid))) >= sl.skipval {
+
+				fmt.Println("diff > skipval")
+
+				for cella.cellid <= cellb.cellid {
+
+					if cella.next.cellid > cellb.cellid {
+						break
+					}
+
+					fmt.Println("skipping all the way")
+					fmt.Println("cella", cella)
+					fmt.Println("cellb", cellb)
+
+					if cella.skip != nil && cella.skip.cellid <= cellb.cellid {
+						cella = cella.skip
+					} else if cella.next != nil && cella.next.cellid <= cellb.cellid {
+						cella = cella.next
+					}
+				}
+			}
+		} else if cella.cellid > cellb.cellid {
+
+			fmt.Println("loop - cella > cellb", cella, cellb)
+
+            if int(math.Abs(float64(cellb.next.cellid - cella.cellid))) >= sl.skipval {
+
+				fmt.Println("diff > skipval")
+
+				for cellb.cellid <= cella.cellid {
+
+					if cellb.next.cellid > cella.cellid {
+						break
+					}
+
+					fmt.Println("skipping all the way")
+					fmt.Println("cella", cella)
+					fmt.Println("cellb", cellb)
+
+					if cellb.skip != nil && cellb.skip.cellid <= cella.cellid {
+						cellb = cellb.skip
+					} else if cellb.next != nil && cellb.next.cellid <= cella.cellid {
+						cellb = cellb.next
+					}
+				}
+			}
+		}
+	}
+
+	return intersect_cells
+}
 
 func main() {
 
@@ -202,14 +319,30 @@ func main() {
 	fmt.Println("end building")
 	
 	// fmt.Println(skips.counts)
-	fmt.Println(skips.list[32709])
+	// fmt.Println(skips.list[32709])
 	// fmt.Println(skips.list[32709].cellid)
 	// fmt.Println(skips.list[32709].next)
 	// fmt.Println(skips.list[32709].next.cellid)
 	// fmt.Println(skips.list[32709].next.next.cellid)
-	// fmt.Println(skips.list[32709].next.next.next.cellid)	q
+	// fmt.Println(skips.list[32709].next.next.next.cellid)
+
+	// 16374:3 23576:4
 
 	buf := &bytes.Buffer{}
-	memviz.Map(buf, skips.list[28606])
+	memviz.Map(buf, skips.list[16374])
 	fmt.Println(buf.String())
+
+	buf2 := &bytes.Buffer{}
+	memviz.Map(buf2, skips.list[23576])
+	fmt.Println(buf2.String())
+
+	ucell := skips.union(16374, 23576)
+	buf3 := &bytes.Buffer{}
+	memviz.Map(buf3, ucell)
+	fmt.Println(buf3.String())
+
+	icell := skips.intersect(32709, 23576)
+	buf4 := &bytes.Buffer{}
+	memviz.Map(buf4, icell)
+	fmt.Println(buf4.String())
 }
