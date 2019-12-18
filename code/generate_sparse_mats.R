@@ -4,20 +4,16 @@
 
 print("-- loading libraries")
 library(Matrix)
-library(splatter)               #bioc
-library(scater)                 #bioc
-library(SingleCellExperiment)   #bioc
+library(splatter)               #bioconductor
+library(scater)                 #bioconductor
+library(SingleCellExperiment)   #bioconductor
 library(tictoc)
 
 # ==================== SIMULATE MATRICIES USING SPLATTER ==================== #
 print("-- simulating some sparse matricies")
-tic()
 
-# Set default params
+# create set_params function to take various input paramters for simulating counts
 params <- splatter::newSplatParams() # with default params
-#dropout_index = 3	#3 for 60% dropout, 5 for 80% dropout, ...
-
-# Set multiple parameters at once (using a list)
 set_params <- function(num_genes, num_cells, dropout_index, cell_types) {
   params <- splatter::setParams(params, 
                     update = list(
@@ -33,30 +29,54 @@ set_params <- function(num_genes, num_cells, dropout_index, cell_types) {
 
 # ============================ RUN SIMULATIONS ============================== #
 
-# initialize parameters
-param_set <- list(num_cells = c(1e6, 1e7))
+# simulate counts varying number of cells
+param_set_nCells <- list(num_cells = c(100, 1000, 10000, 1e+05))
 celltype_ratios <- c(0.3, 0.2, 0.1, 0.2, 0.1, 0.1)
-
-# simulate counts
-for (p in 1:length(param_set$num_cells)) {
-  print("--- set up current batch of parameters")
+for (p in 1:length(param_set_nCells$num_cells)) {
+  print(paste0("--- set up current batch of parameters: nCells = ", param_set_nCells$num_cells[p]))
   params <- set_params(num_genes = 20000, 
-                       num_cells = param_set$num_cells[p],
+                       num_cells = param_set_nCells$num_cells[p],
                        cell_types = celltype_ratios,
-                       dropout_index = 5) # gives ~ 1.5% density
-  current_params <- setParams(params)
+                       dropout_index = 5) # gives ~ 98.5% sparsity
+  current_params <- splatter::setParams(params)
   current_sim <- splatter::splatSimulate(current_params)
 
   print("--- get count mats")
-  current_counts <- counts(current_sim) # try truecounts() to act
-  sum(current_counts > 0)/length(current_counts)
-  current_sparse <- Matrix(current_counts, sparse = TRUE)
+  current_sparse <- Matrix(counts(current_sim), sparse = TRUE) # try truecounts() to act
 
   print("--- convert to .mtx format for input to scIndex")
-  filename <- paste0("../data/", params@nGenes, "genes_", param_set[["num_cells"]][p], "cells.mtx")
+  filename <- paste0("../data/", params@nGenes, "genes_", 
+                     params@nCells, "cells_", 
+                     params@dropout.mid, "dropindex", 
+                     ".mtx")
   Matrix::writeMM(obj = current_sparse, file = filename)
 
   # remove all intermediate variables to save memory (if necessary)
-  #rm(current_counts, current_params, current_sim, current_sparse)
+  rm(current_params, current_sim, current_sparse, filename)
 }
 toc()
+
+# simulate counts varying sparsity
+param_set_dropout_index <- list(dropout_index = c(5, 4, 3, 2, 1)) # used to sim sparsity
+for (d in 1:length(param_set_dropout_index$dropout_index)) {
+  print(paste0("--- set up current batch of parameters: dropout_index = ", param_set_dropout_index$dropout_index[d]))
+  params <- set_params(num_genes = 20000, 
+                       num_cells = 68000, # keeping the same as pbmc_68k
+                       cell_types = celltype_ratios,
+                       dropout_index = param_set_dropout_index[["dropout_index"]][d])
+  current_params <- splatter::setParams(params)
+  current_sim <- splatter::splatSimulate(current_params)
+
+  print("--- get count mats") 
+  current_sparse <- Matrix(counts(current_sim), sparse = TRUE) # try truecounts() to act
+
+  print("--- convert to .mtx format for input to scIndex")
+  filename <- paste0("../data/", params@nGenes, "genes_", 
+                     params@nCells, "cells_", 
+                     params@dropout.mid, "dropindex", 
+                     ".mtx")
+  Matrix::writeMM(obj = current_sparse, file = filename)
+
+  # remove all intermediate variables to save memory (if necessary)
+  rm(current_params, current_sim, current_sparse, filename)
+}
