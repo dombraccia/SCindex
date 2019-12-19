@@ -53,4 +53,8 @@ int main()
         temp = temp->next;
     }
     cout<<"Intersection ----->"<<int_ctr<<"\n";
-};
+
+    cell* not_list = NULL;
+    not_list = NOT(c1, input_data.num_cells);
+    cout<<"NOT"<<not_list->next->cellid<<"\t"<<not_list->next->next->cellid<<"\n";
+}
