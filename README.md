@@ -9,7 +9,7 @@ data was downloaded and unzipped using:
 wget http://cf.10xgenomics.com/samples/cell-exp/1.1.0/fresh_68k_pbmc_donor_a/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz
 gunzip fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz
 tar xvf fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar
-rm fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar.gz
+rm fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.tar
 ```
 
 ## Data processing

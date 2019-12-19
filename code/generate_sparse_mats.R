@@ -7,7 +7,6 @@ library(Matrix)
 library(splatter)               #bioconductor
 library(scater)                 #bioconductor
 library(SingleCellExperiment)   #bioconductor
-library(tictoc)
 
 # ==================== SIMULATE MATRICIES USING SPLATTER ==================== #
 print("-- simulating some sparse matricies")
@@ -54,7 +53,6 @@ for (p in 1:length(param_set_nCells$num_cells)) {
   # remove all intermediate variables to save memory (if necessary)
   rm(current_params, current_sim, current_sparse, filename)
 }
-toc()
 
 # simulate counts varying sparsity
 param_set_dropout_index <- list(dropout_index = c(5, 4, 3, 2, 1)) # used to sim sparsity
