@@ -9,3 +9,8 @@
 
 ## Folders
 data/*
+
+## Outfiles
+*.e
+*.o
+*.out
