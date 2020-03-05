@@ -23,7 +23,12 @@ params
 
 # Running simulation
 sim <- splatSimulate(params)
+sim
 
 # get count matricies
+name <- function(variables) {
+  
+}
+
 
 # convert to .mtx format for input to scIndex
