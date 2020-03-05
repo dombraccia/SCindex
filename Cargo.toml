@@ -1,0 +1,7 @@
+[package]
+name = "SCindex"
+version = "0.1.0"
+authors = ["Domenick J. Braccia <dbraccia@umd.edu>"]
+edition = "2018"
+
+[dependencies]
