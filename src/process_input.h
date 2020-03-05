@@ -36,6 +36,8 @@ class Skiplist
     public:
     map<int, cell*> gene_map;
     int skip_value;
+    int num_cells;
+    int num_genes;
     // constructor
     Skiplist(string filepath, int skipval)
     {
@@ -59,6 +61,8 @@ class Skiplist
 
         // Read defining parameters:
         data >> M >> N >> L;
+        num_cells = N;
+        num_genes = M;
         cout << "number of genes = " << M << endl;
         cout << "number of cells = " << N << endl;
         cout << "number of non-zero expressed genes = " << L << endl;

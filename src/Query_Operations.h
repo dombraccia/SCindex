@@ -94,3 +94,30 @@ cell* INTERSECTION(cell* c1, cell* c2, int skip_value, cell* intersection)
         intersection =  INTERSECTION(c1, c2, skip_value, intersection);
     return intersection;
 }
+
+cell* NOT(cell *c1, int MAX_Value)
+{
+    cell* temp = c1;
+    cell* temp_not = new cell;
+    cell* not_list = temp_not;
+    while(temp != NULL)
+    {
+        int start = temp->cellid;
+        int endval;
+        if (temp->next == NULL)
+            endval = MAX_Value;
+        else
+            endval = temp->next->cellid;
+        for (int i=start+1; i<endval; i++)
+        {
+            cell* tmp = new cell;
+            tmp->cellid = i;
+            tmp->next = NULL;
+            temp_not->next = tmp;
+            temp_not = temp_not->next;
+        }
+        temp = temp->next;
+    }
+
+    return not_list;
+}
